@@ -87,7 +87,7 @@ exports.author_delete_get = function(req, res, next) {
 };
 
 // Handle Author delete on POST
-exports.author_delete_post = function(req, res) {
+exports.author_delete_post = function(req, res, next) {
   req.checkBody('authorid', 'Author id must exist').notEmpty();
 
   async.parallel({
