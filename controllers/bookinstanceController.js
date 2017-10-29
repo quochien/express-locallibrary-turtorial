@@ -39,7 +39,7 @@ exports.bookinstance_create_post = function(req, res, next) {
   // req.checkBody('due_back', 'Invalid date').optional({ checkFalsy: true }).isDate();
 
   req.sanitize('book').escape();
-  req.sanitize('imprint').escape();
+  req.sanitize('imprint');
   req.sanitize('status').escape();
   req.sanitize('book').trim();
   req.sanitize('imprint').trim();
@@ -121,7 +121,7 @@ exports.bookinstance_update_post = function(req, res, next) {
   // req.checkBody('due_back', 'Invalid date').optional({ checkFalsy: true }).isDate();
 
   req.sanitize('book').escape();
-  req.sanitize('imprint').escape();
+  req.sanitize('imprint');
   req.sanitize('status').escape();
   req.sanitize('book').trim();
   req.sanitize('imprint').trim();
