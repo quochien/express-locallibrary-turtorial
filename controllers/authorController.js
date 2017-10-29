@@ -116,10 +116,49 @@ exports.author_delete_post = function(req, res, next) {
 
 // Display Author update form on GET
 exports.author_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author update GET');
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
+  Author.findById(req.params.id)
+    .exec(function(err, author) {
+      if(err) { return next(err); }
+
+      res.render('author_form', { title: 'Create Author', author: author });
+    });
 };
 
 // Handle Author update on POST
 exports.author_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author update POST');
+  req.checkBody('first_name', 'First name must be specified.').notEmpty();
+  req.checkBody('family_name', 'Family name must be specified.').notEmpty();
+  req.checkBody('family_name', 'Family name must be alphanumeric text.').isAlpha();
+  // req.checkBody('date_of_birth', 'Invalid date').optional({ checkFalsy: true }).isDate();
+  // req.checkBody('date_of_death', 'Invalid date').optional({ checkFalsy: true }).isDate();
+
+  req.sanitize('first_name').escape();
+  req.sanitize('family_name').escape();
+  req.sanitize('first_name').trim();
+  req.sanitize('family_name').trim();
+  req.sanitize('date_of_birth').toDate();
+  req.sanitize('date_of_death').toDate();
+
+  var author = new Author({
+    first_name: req.body.first_name,
+    family_name: req.body.family_name,
+    date_of_birth: req.body.date_of_birth,
+    date_of_death: req.body.date_of_death,
+    _id: req.params.id
+  });
+
+  var errors = req.validationErrors();
+  if (errors) {
+    res.render('author_form', { title: 'Update Author', author: author, errors: errors });
+    return;
+  }
+  else {
+    Author.findByIdAndUpdate(req.params.id, author, {}, function(err, the_author) {
+      if (err) { return next(err); }
+      res.redirect(the_author.url);
+    });
+  }
 };

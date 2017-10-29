@@ -115,6 +115,9 @@ exports.genre_delete_post = function(req, res) {
 
 // Display Genre update form on GET
 exports.genre_update_get = function(req, res, next) {
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
   Genre.findById(req.params.id).exec(function(err, genre){
     if (err) { return next(err); }
 
